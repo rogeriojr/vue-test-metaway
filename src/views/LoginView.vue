@@ -7,14 +7,14 @@
       <v-card-text>
         <v-form @submit.prevent="submit">
           <v-text-field
-            v-model="form.login"
+            v-model="form.username"
             label="Usuário"
             prepend-icon="mdi-account"
             :rules="[required]"
           />
 
           <v-text-field
-            v-model="form.senha"
+            v-model="form.password"
             label="Senha"
             prepend-icon="mdi-lock"
             :type="showPassword ? 'text' : 'password'"
@@ -41,8 +41,8 @@ const auth = useAuthStore()
 const router = useRouter()
 
 const form = ref({
-  login: '',
-  senha: '',
+  username: '',
+  password: '',
 })
 const rememberMe = ref(false)
 const showPassword = ref(false)
@@ -54,7 +54,7 @@ const validatePassword = (v: string) =>
 const submit = async () => {
   auth.rememberMe = rememberMe.value
   try {
-    await auth.login(form.value.login, form.value.senha)
+    await auth.login(form.value.username, form.value.password)
     router.push('/')
   } catch (error) {
     alert('Login falhou! Verifique suas credenciais.')

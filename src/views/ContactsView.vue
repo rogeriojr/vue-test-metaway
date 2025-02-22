@@ -28,21 +28,22 @@
       </template>
     </v-data-table>
 
-    <ContactDialog v-model="dialog" :contact="editedItem" @save="saveContact" />
+    <ConfirmationDialog v-model="dialog" :contact="editedItem" @save="saveContact" />
   </v-container>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useContactsStore } from '@/stores/contacts'
-import ContactDialog from '@/components/ContactDialog.vue'
+import ConfirmationDialog from '@/components/ConfirmationDialog.vue'
+import type { Contato } from '@/types'
 
 const contactsStore = useContactsStore()
 const dialog = ref(false)
-const editedItem = ref<Partial<Contact> | null>(null)
+const editedItem = ref<Partial<Contato> | null>(null)
 
 const headers = [
-  { title: 'Nome', value: 'nome' },
+  { title: 'Nome', value: 'pessoa.nome' },
   { title: 'Telefone', value: 'telefone' },
   { title: 'Ações', value: 'actions', sortable: false },
 ]
@@ -56,12 +57,18 @@ const openDialog = () => {
   dialog.value = true
 }
 
-const editItem = (item: Contact) => {
+const editItem = (item: Contato) => {
   editedItem.value = { ...item }
   dialog.value = true
 }
 
-const saveContact = async (contact: Contact) => {
+const deleteItem = async (item: Contato) => {
+  if (confirm(`Deseja excluir ${item?.pessoa?.nome}?`)) {
+    await contactsStore.deleteContact(item.id as number)
+  }
+}
+
+const saveContact = async (contact: Contato) => {
   if (contact.id) {
     await contactsStore.updateContact(contact.id, contact)
   } else {

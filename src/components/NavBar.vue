@@ -3,7 +3,7 @@
     <v-list nav>
       <v-list-item to="/" title="Home" />
       <v-list-item to="/my-registrations" title="Meu Cadastro" />
-      <v-list-item v-if="auth.user?.admin" to="/users" title="Usuários" />
+      <v-list-item v-if="auth.user?.tipos?.includes('ADMIN')" to="/users" title="Usuários" />
       <v-list-item to="/persons" title="Pessoas" />
       <v-list-item to="/contacts" title="Contatos" />
       <v-list-item @click="logout" title="Logout" />

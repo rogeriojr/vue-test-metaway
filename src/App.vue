@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <!-- Barra de navegação -->
+    <!-- Navigation bar -->
     <v-app-bar app color="primary" dark v-if="isAuthenticated">
       <v-toolbar-title>Minha Agenda</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -12,13 +12,12 @@
       <v-btn @click="logout" text>Logout</v-btn>
     </v-app-bar>
 
-    <!-- Conteúdo principal -->
+    <!-- Main content -->
     <v-main>
       <router-view></router-view>
-      <!-- Aqui as rotas serão renderizadas -->
     </v-main>
 
-    <!-- Snackbar para mensagens globais -->
+    <!-- Snackbar for global messages -->
     <v-snackbar v-model="snackbar.show" :color="snackbar.color" timeout="3000">
       {{ snackbar.message }}
     </v-snackbar>
@@ -27,35 +26,35 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
-import { useUserStore } from '@/stores/userStore'
+import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 
 export default defineComponent({
   setup() {
-    const userStore = useUserStore()
+    const authStore = useAuthStore()
     const router = useRouter()
 
-    // Verifica se o usuário está autenticado
-    const isAuthenticated = computed(() => userStore.isAuthenticated)
+    // Check if the user is authenticated
+    const isAuthenticated = computed(() => authStore.token !== null)
 
-    // Verifica se o usuário é admin (exemplo)
-    const isAdmin = computed(() => userStore.user?.role === 'admin')
+    // Check if the user is admin
+    const isAdmin = computed(() => authStore.user?.tipos?.includes('ADMIN'))
 
-    // Snackbar para mensagens globais
+    // Snackbar for global messages
     const snackbar = ref({
       show: false,
       message: '',
       color: 'success',
     })
 
-    // Função para logout
+    // Logout function
     const logout = () => {
-      userStore.logout()
+      authStore.logout()
       router.push('/login')
       showSnackbar('Logout realizado com sucesso!', 'success')
     }
 
-    // Função para exibir mensagens no snackbar
+    // Function to show snackbar messages
     const showSnackbar = (message: string, color: string = 'success') => {
       snackbar.value.message = message
       snackbar.value.color = color
@@ -74,5 +73,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Estilos específicos para o App.vue */
+/* Specific styles for App.vue */
 </style>

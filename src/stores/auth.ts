@@ -15,14 +15,14 @@ export const useAuthStore = defineStore('auth', {
     rememberMe: false
   }),
   actions: {
-    async login(login: string, senha: string) {
+    async login(username: string, password: string) {
       try {
-        const response = await api.post('/auth/login', { login, senha })
-        this.token = response.data.token
-        this.user = response.data.user
+        const response = await api.post('/auth/login', { username, password })
+        this.token = response.data.accessToken
+        this.user = response.data
 
         if (this.rememberMe) {
-          localStorage.setItem('token', this.token)
+          localStorage.setItem('token', this.token || '')
         }
 
         return true
@@ -38,6 +38,6 @@ export const useAuthStore = defineStore('auth', {
     }
   },
   getters: {
-    isAdmin: (state) => state.user?.tipo === 'ADMIN'
+    isAdmin: (state) => state.user?.tipos?.includes('ADMIN')
   }
 })

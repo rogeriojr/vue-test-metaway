@@ -1,11 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import HomeView from '@/views/HomeView.vue';
+import UsersView from '@/views/UsersView.vue';
+import PersonsView from '@/views/PersonsView.vue';
+import ContactsView from '@/views/ContactsView.vue';
+import LoginView from '@/views/LoginView.vue';
+import MyRegistrationsView from '@/views/MyRegistrationsView.vue';
 
 const routes = [
-  { path: '/login', name: 'Login', component: () => import('@/views/LoginView.vue') },
-  { path: '/', name: 'Home', component: () => import('@/views/HomeView.vue'), meta: { requiresAuth: true } },
-  { path: '/contacts', name: 'Contacts', component: () => import('@/views/ContactsView.vue'), meta: { requiresAuth: true } },
-  // Adicione outras rotas...
+  { path: '/login', name: 'Login', component: LoginView },
+  { path: '/', name: 'Home', component: HomeView as any, meta: { requiresAuth: true } },
+  { path: '/contacts', name: 'Contacts', component: ContactsView as any, meta: { requiresAuth: true } },
+  { path: '/persons', name: 'Persons', component: PersonsView as any, meta: { requiresAuth: true } },
+  { path: '/users', name: 'Users', component: UsersView as any, meta: { requiresAuth: true } },
+  { path: '/my-registrations', name: 'MyRegistrations', component: MyRegistrationsView as any, meta: { requiresAuth: true } },
 ]
 
 const router = createRouter({
