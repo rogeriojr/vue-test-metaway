@@ -3,11 +3,7 @@
     <v-card class="elevation-12 login-card" width="100%" max-width="400">
       <v-card-text class="pa-6">
         <div class="logo-container">
-          <img
-            src="https://metaway.com.br/images/logo-metaway.png"
-            alt="Logo Metaway"
-            class="logo"
-          />
+          <img src="@/assets/logo-metaway.png" alt="Logo Metaway" class="logo" />
         </div>
         <v-form @submit.prevent="submit" class="login-form">
           <v-text-field
