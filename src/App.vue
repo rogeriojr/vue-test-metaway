@@ -12,7 +12,6 @@
       <v-btn @click="logout" variant="text">Logout</v-btn>
     </v-app-bar>
 
-    <!-- Resto do código permanece igual -->
     <v-main>
       <router-view></router-view>
     </v-main>

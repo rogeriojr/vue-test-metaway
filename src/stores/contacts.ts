@@ -18,7 +18,7 @@ export const useContactsStore = defineStore('contacts', {
     async fetchContacts() {
       this.loading = true
       try {
-        const response = await api.get('/contato/listar')
+        const response = await api.get('/contato/listar/1')
         this.contacts = response.data
       } catch (error) {
         console.error('Failed to fetch contacts:', error)
