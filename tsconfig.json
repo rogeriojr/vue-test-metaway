@@ -14,14 +14,21 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vite/client", "cypress"]
+    "types": [
+      "vite/client",
+      "cypress",
+      "@testing-library/cypress",
+      "cypress-real-events",
+      "cypress-vuetify"
+    ]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
     "vite-env.d.ts",
-    "src/types/**/*.d.ts"
+    "src/types/**/*.d.ts",
+    "cypress/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
