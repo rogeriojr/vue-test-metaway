@@ -6,7 +6,8 @@
       </v-card-title>
       <v-card-text>
         <v-form @submit.prevent="$emit('save', form)">
-            <v-text-field v-model="form?.nome" label="Nome" :rules="[required]" required />
+          <!-- Remove optional chaining from v-model -->
+          <v-text-field v-model="form.nome" label="Nome" :rules="[required]" required />
 
           <v-text-field
             v-model="form.telefone"
@@ -34,6 +35,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'save'])
 
 const dialog = ref(props.modelValue)
+// Form will always be initialized with at least an empty object
 const form = ref<Partial<Contato>>(props.contact || {})
 
 watch(
