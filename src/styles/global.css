@@ -1,0 +1,11 @@
+:root {
+  --background-color: #f5f5f5;
+  --background-login: linear-gradient(135deg, #1976d2, #26a69a);
+  --card-background: rgba(255, 255, 255, 0.9);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+}

@@ -14,13 +14,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": [
-      "vite/client",
-      "cypress",
-      "@testing-library/cypress",
-      "cypress-real-events",
-      "cypress-vuetify"
-    ]
+    "types": ["vite/client", "cypress", "@testing-library/cypress", "cypress-real-events"]
   },
   "include": [
     "src/**/*.ts",

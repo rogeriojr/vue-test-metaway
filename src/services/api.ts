@@ -2,7 +2,10 @@ import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 })
 
 api.interceptors.request.use(config => {
@@ -15,11 +18,22 @@ api.interceptors.request.use(config => {
 
 api.interceptors.response.use(
   response => response,
-  error => {
-    if (error.response.status === 401) {
-      const auth = useAuthStore()
-      auth.logout()
+  async error => {
+    const originalRequest = error.config
+    const auth = useAuthStore()
+
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+
+      try {
+        await auth.refreshAuth()
+        return api(originalRequest)
+      } catch (refreshError) {
+        auth.logout()
+        return Promise.reject(refreshError)
+      }
     }
+
     return Promise.reject(error)
   }
 )

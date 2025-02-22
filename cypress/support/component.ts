@@ -1,25 +1,13 @@
-import { mount } from '@cypress/vue'
-import { createVuetify } from 'vuetify'
-import { createPinia } from 'pinia'
-import 'vuetify/styles'
+import type { VueWrapper, mount } from '@vue/test-utils'
+import { Component, ComponentOptions } from 'vue'
 
 declare global {
   namespace Cypress {
     interface Chainable {
-      mount: typeof mount
+      qMount: (
+        component: Component | ComponentOptions,
+        options?: Parameters<typeof mount>[1]
+      ) => Chainable<VueWrapper<any>>
     }
   }
 }
-
-const vuetify = createVuetify()
-const pinia = createPinia()
-
-Cypress.Commands.add('mount', (component, options = {}) => {
-  return mount(component, {
-    ...options,
-    global: {
-      plugins: [vuetify, pinia],
-      ...options.global
-    }
-  })
-})

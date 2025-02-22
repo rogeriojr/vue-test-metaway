@@ -1,25 +1,48 @@
 <template>
-  <v-dialog v-model="dialog" max-width="600px">
-    <v-card>
-      <v-card-title>
-        {{ contact?.id ? 'Editar Contato' : 'Novo Contato' }}
-      </v-card-title>
-      <v-card-text>
-        <v-form @submit.prevent="$emit('save', form)">
-          <v-text-field v-model="form.nome" label="Nome" :rules="[required]" required />
+  <q-dialog v-model="dialog" persistent>
+    <q-card class="dialog-card">
+      <q-card-section class="bg-primary text-white">
+        <div class="text-h6">{{ title }}</div>
+      </q-card-section>
 
-          <v-text-field
+      <q-card-section class="q-pt-xl">
+        <q-form @submit.prevent="onSubmit" class="q-gutter-md">
+          <q-input
+            v-model="form.nome"
+            label="Nome completo"
+            outlined
+            dense
+            :rules="[required]"
+            lazy-rules
+          />
+
+          <q-input
             v-model="form.telefone"
             label="Telefone"
-            v-mask="'(##) #####-####'"
+            outlined
+            dense
+            mask="(##) #####-####"
+            unmasked-value
             :rules="[required, validatePhone]"
           />
 
-          <v-btn type="submit" color="primary">Salvar</v-btn>
-        </v-form>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+          <q-input
+            v-model="form.email"
+            label="E-mail"
+            outlined
+            dense
+            type="email"
+            :rules="[required, validateEmail]"
+          />
+
+          <div class="row q-gutter-md justify-end">
+            <q-btn label="Cancelar" color="negative" v-close-popup outline />
+            <q-btn type="submit" label="Salvar" color="positive" :loading="loading" />
+          </div>
+        </q-form>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
@@ -28,19 +51,32 @@ import type { Contato } from '@/types'
 
 const props = defineProps({
   modelValue: Boolean,
-  contact: Object as () => Contato | null,
+  contact: {
+    type: Object as () => Contato | null,
+    default: null,
+  },
 })
 
-const emit = defineEmits(['update:modelValue', 'save'])
+const emit = defineEmits(['update:modelValue', 'submit'])
 
 const dialog = ref(props.modelValue)
+const loading = ref(false)
+const title = computed(() => (props.contact?.id ? 'Editar Contato' : 'Novo Contato'))
 
-const form = ref<Partial<Contato>>(props.contact || {})
+const form = ref<Partial<Contato>>({
+  nome: '',
+  telefone: '',
+  email: '',
+  pessoa: undefined,
+})
 
 watch(
   () => props.modelValue,
   (val) => {
     dialog.value = val
+    if (val && props.contact) {
+      form.value = { ...props.contact }
+    }
   },
 )
 
@@ -48,6 +84,26 @@ watch(dialog, (val) => {
   emit('update:modelValue', val)
 })
 
-const required = (v: string) => !!v || 'Campo obrigatório'
-const validatePhone = (v: string) => v?.length === 15 || 'Telefone inválido'
+const required = (val: string) => !!val || 'Campo obrigatório'
+const validatePhone = (val: string) => val?.length === 11 || 'Telefone inválido'
+const validateEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'E-mail inválido'
+
+const onSubmit = async () => {
+  loading.value = true
+  try {
+    emit('submit', form.value)
+    dialog.value = false
+  } catch (error) {
+    console.error('Erro ao salvar:', error)
+  } finally {
+    loading.value = false
+  }
+}
 </script>
+
+<style scoped>
+.dialog-card {
+  min-width: 400px;
+  max-width: 80vw;
+}
+</style>

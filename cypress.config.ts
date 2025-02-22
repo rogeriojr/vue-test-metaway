@@ -1,26 +1,51 @@
 import { defineConfig } from 'cypress'
+import { loadEnv } from 'vite'
+import { quasar } from '@quasar/vite-plugin'
+
+
+const env = loadEnv('test', process.cwd(), '')
+const cypressEnv = require('./cypress.env.json')
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:5173',
+    baseUrl: 'http://localhost:9000',
     setupNodeEvents(on, config) {
-      // Adicione aqui:
-      require('@cypress/vue/dist/plugins').default(on, config) // Plugin oficial do Vue
-      require('cypress-vuetify').default(on) // Plugin para Vuetify
-      require('cypress-real-events/support').on(on) // Eventos reais do navegador
-      require('@testing-library/cypress/commands') // Testing Library
 
-      // Opcional (report de testes):
-      require('cypress-fail-fast/plugin')(on, config) // Falha rápida nos testes
-      require('cypress-mochawesome-reporter/plugin')(on) // Reporter HTML
+      require('@cypress/vue/dist/plugins').default(on, config)
+      require('cypress-real-events/support').on(on)
+      require('@testing-library/cypress/commands')
+      require('cypress-fail-fast/plugin')(on, config)
+      require('cypress-mochawesome-reporter/plugin')(on)
+
+      config.env = {
+        ...config.env,
+        VITE_API_URL: env.VITE_API_URL,
+        ...cypressEnv
+      }
+
+      quasar({
+        sassVariables: 'src/css/quasar.variables.sass'
+      })
 
       return config
     },
     env: {
-      USERNAME: 'usuario_teste',
-      PASSWORD: 'senha123',
-      ADMIN_USER: 'admin',
-      ADMIN_PASSWORD: 'admin123'
-    }
+      ...cypressEnv,
+      API_URL: env.VITE_API_URL,
+      coverage: {
+        url: `${env.VITE_API_URL}/__coverage__`
+      }
+    },
+    specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
+    supportFile: 'cypress/support/component.ts',
+    experimentalRunAllSpecs: true
+  },
+  reporter: 'cypress-mochawesome-reporter',
+  reporterOptions: {
+    reportDir: 'cypress/reports',
+    charts: true,
+    reportPageTitle: 'Relatório de Testes',
+    embeddedScreenshots: true,
+    inlineAssets: true
   }
 })

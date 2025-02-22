@@ -6,7 +6,7 @@ export interface User {
   email: string
   telefone: string
   dataNascimento: string
-  password: string
+  password?: string
   tipos: string[]
 }
 
@@ -25,7 +25,7 @@ export interface Foto {
   id: string
   name: string
   type: string
-  url: string
+  url?: string
 }
 
 export interface Person {
@@ -38,7 +38,7 @@ export interface Person {
 
 export interface Contato {
   id?: number
-  telefone?: string
+  telefone: string
   nome?: string
   email?: string
   tipoContato?: 'CELULAR' | 'EMAIL' | 'OUTRO'
@@ -55,4 +55,20 @@ export interface AuthResponse {
   id: number
   username: string
   tipos: string[]
+}
+
+export interface ApiResponse<T> {
+  message: string
+  object: T
+}
+
+
+export interface PersonsStore {
+  searchTerm: string
+  persons: Person[]
+  loading: boolean
+  fetchPersons: () => Promise<void>
+  savePerson: (person: Partial<Person>) => Promise<void>
+  deletePerson: (id: string) => Promise<void>
+  uploadPhoto: (id: string, file: File) => Promise<void>
 }

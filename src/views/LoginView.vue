@@ -1,130 +1,117 @@
 <template>
-  <v-container class="fill-height d-flex align-center justify-center background-container">
-    <v-card class="elevation-12 login-card" width="100%" max-width="400">
-      <v-card-text class="pa-6">
-        <div class="logo-container">
-          <img src="@/assets/logo-metaway.png" alt="Logo Metaway" class="logo" />
-        </div>
-        <v-form @submit.prevent="submit" class="login-form">
-          <v-text-field
+  <q-page class="flex flex-center bg-grey-2">
+    <q-card class="login-card q-pa-xl shadow-10">
+      <q-card-section class="text-center">
+        <img src="@/assets/logo-metaway.png" alt="Logo Metaway" class="logo q-mb-xl" />
+
+        <q-form @submit.prevent="submit" class="q-gutter-y-lg">
+          <q-input
             v-model="form.username"
             label="Usuário"
-            prepend-icon="mdi-account"
+            outlined
+            dense
             :rules="[required]"
-            variant="outlined"
-            color="primary"
-            density="comfortable"
-            class="mb-3 input-field"
-          />
+            lazy-rules
+          >
+            <template v-slot:prepend>
+              <q-icon name="person" />
+            </template>
+          </q-input>
 
-          <v-text-field
+          <q-input
             v-model="form.password"
             label="Senha"
-            prepend-icon="mdi-lock"
             :type="showPassword ? 'text' : 'password'"
-            :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-            @click:append="showPassword = !showPassword"
+            outlined
+            dense
             :rules="[required, validatePassword]"
-            variant="outlined"
-            color="primary"
-            density="comfortable"
-            class="mb-3 input-field"
-          />
-
-          <v-checkbox
-            v-model="rememberMe"
-            label="Lembrar credenciais"
-            color="primary"
-            density="comfortable"
-            class="remember-me checkbox-field"
-          />
-
-          <v-btn
-            type="submit"
-            color="primary"
-            size="large"
-            block
-            variant="elevated"
-            class="text-button"
           >
-            Entrar
-          </v-btn>
-        </v-form>
-      </v-card-text>
-    </v-card>
-  </v-container>
+            <template v-slot:prepend>
+              <q-icon name="lock" />
+            </template>
+            <template v-slot:append>
+              <q-icon
+                :name="showPassword ? 'visibility_off' : 'visibility'"
+                @click="togglePassword"
+                class="cursor-pointer"
+              />
+            </template>
+          </q-input>
+
+          <q-checkbox v-model="rememberMe" label="Lembrar credenciais" color="primary" />
+
+          <q-btn
+            type="submit"
+            label="Entrar"
+            color="primary"
+            class="full-width q-mt-lg"
+            :loading="loading"
+          />
+        </q-form>
+      </q-card-section>
+    </q-card>
+  </q-page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 
 const auth = useAuthStore()
 const router = useRouter()
+const $q = useQuasar()
 
-const form = ref({ username: '', password: '' })
+const form = ref({
+  username: '',
+  password: '',
+})
 const rememberMe = ref(false)
 const showPassword = ref(false)
+const loading = ref(false)
 
-const required = (v: string) => !!v || 'Campo obrigatório'
-const validatePassword = (v: string) =>
-  /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v) || 'Mínimo 8 caracteres com letras e números'
+const required = (val: string) => !!val || 'Campo obrigatório'
+const validatePassword = (val: string) => /^.{8,}$/.test(val) || 'Mínimo 8 caracteres'
+
+const togglePassword = () => {
+  showPassword.value = !showPassword.value
+}
 
 async function submit() {
-  auth.rememberMe = rememberMe.value
+  loading.value = true
   try {
     await auth.login(form.value.username, form.value.password)
     router.push('/')
+    $q.notify({
+      type: 'positive',
+      message: 'Login realizado com sucesso!',
+    })
   } catch (error) {
-    alert('Login falhou! Verifique suas credenciais.')
+    $q.notify({
+      type: 'negative',
+      message: 'Credenciais inválidas!',
+    })
+  } finally {
+    loading.value = false
   }
 }
 </script>
 
 <style scoped>
-.background-container {
-  background: url('https://static.vecteezy.com/ti/vetor-gratis/p1/8174212-abstrato-azul-claro-fundo-azul-claro-gradiente-fundo-com-linhas-brancas-e-ondas-gratis-vetor.jpg')
-    no-repeat center center/cover;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .login-card {
-  border-radius: 16px !important;
-  overflow: hidden;
-  padding: 20px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
-  backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.9);
+  width: 100%;
+  max-width: 400px;
+  border-radius: 16px;
+  transition: transform 0.3s;
 }
 
-.logo-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 15px;
+.login-card:hover {
+  transform: translateY(-5px);
 }
 
 .logo {
-  width: 150px;
-}
-
-.input-field {
-  font-size: 14px;
-}
-
-.checkbox-field {
-  color: #1976d2 !important;
-}
-
-.remember-me {
-  margin-bottom: 15px;
-}
-
-.text-button {
-  font-size: 16px;
-  font-weight: bold;
+  width: 180px;
+  height: auto;
 }
 </style>

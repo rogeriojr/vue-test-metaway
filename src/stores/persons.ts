@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+/// <reference path="../../cypress/support/commands.ts" />
 import { defineStore } from 'pinia'
 import api from '@/services/api'
 import type { Person, Endereco } from '@/types'

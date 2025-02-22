@@ -1,35 +1,43 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12" md="4">
-        <v-text-field
-          v-model="contactsStore.searchQuery"
-          label="Pesquisar Contatos"
-          prepend-inner-icon="mdi-magnify"
-          clearable
-        />
-      </v-col>
-      <v-col cols="12" md="8" class="text-right">
-        <v-btn color="primary" @click="openDialog">
-          <v-icon left>mdi-plus</v-icon>Novo Contato
-        </v-btn>
-      </v-col>
-    </v-row>
+  <q-page class="q-pa-md">
+    <q-card>
+      <q-card-section>
+        <div class="row q-gutter-md">
+          <q-input
+            v-model="contactsStore.searchQuery"
+            label="Pesquisar Contatos"
+            outlined
+            dense
+            clearable
+          >
+            <template v-slot:prepend>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+          <q-space />
+          <q-btn color="primary" @click="openDialog" icon="add" label="Novo Contato" />
+        </div>
+      </q-card-section>
 
-    <v-data-table
-      :headers="headers"
-      :items="contactsStore.filteredContacts"
-      :loading="contactsStore.loading"
-      class="elevation-1"
-    >
-      <template v-slot:item.actions="{ item }">
-        <v-icon small @click="editItem(item)">mdi-pencil</v-icon>
-        <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
-      </template>
-    </v-data-table>
+      <q-card-section>
+        <q-table
+          :rows="contactsStore.filteredContacts"
+          :columns="headers"
+          :loading="contactsStore.loading"
+          row-key="id"
+        >
+          <template v-slot:body-cell-actions="props">
+            <q-td :props="props">
+              <q-btn flat round icon="edit" @click="editItem(props.row)" />
+              <q-btn flat round icon="delete" @click="deleteItem(props.row)" />
+            </q-td>
+          </template>
+        </q-table>
+      </q-card-section>
+    </q-card>
 
     <ConfirmationDialog v-model="dialog" :contact="editedItem" @save="saveContact" />
-  </v-container>
+  </q-page>
 </template>
 
 <script setup lang="ts">
@@ -43,9 +51,9 @@ const dialog = ref(false)
 const editedItem = ref<Partial<Contato> | null>(null)
 
 const headers = [
-  { title: 'Nome', value: 'pessoa.nome' },
-  { title: 'Telefone', value: 'telefone' },
-  { title: 'Ações', value: 'actions', sortable: false },
+  { name: 'nome', label: 'Nome', field: 'pessoa.nome', align: 'left' },
+  { name: 'telefone', label: 'Telefone', field: 'telefone', align: 'left' },
+  { name: 'actions', label: 'Ações', field: 'actions', align: 'right' },
 ]
 
 onMounted(() => {

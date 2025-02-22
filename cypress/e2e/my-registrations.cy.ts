@@ -1,21 +1,20 @@
-describe('Meu Cadastro', () => {
+describe('Meu Cadastro Tests', () => {
   beforeEach(() => {
-    cy.login()
-    cy.visit('/my-registrations')
+    cy.login('admin', '12345678')
+    cy.visit('/meu-cadastro')
   })
 
-  it('Deve atualizar informações do usuário', () => {
-    cy.get('@vuetify').textField('Nome completo').clear().type('Novo Nome Teste')
-    cy.get('@vuetify').button('Salvar Alterações').click()
-
-    cy.get('@vuetify').textField('Nome completo').should('have.value', 'Novo Nome Teste')
+  it('Should update profile', () => {
+    cy.get('[data-cy="user-name"]').clear().type('Novo Nome')
+    cy.get('[data-cy="submit-profile"]').click()
+    cy.contains('Dados atualizados').should('be.visible')
   })
 
-  it('Deve alterar a senha', () => {
-    cy.get('@vuetify').textField('Senha Atual').type(Cypress.env('PASSWORD'))
-    cy.get('@vuetify').textField('Nova Senha').type('novaSenha123')
-    cy.get('@vuetify').button('Alterar Senha').click()
-
-    cy.contains('.v-alert', 'Senha alterada com sucesso').should('exist')
+  it('Should change password', () => {
+    cy.get('[data-cy="current-password"]').type('12345678')
+    cy.get('[data-cy="new-password"]').type('NovaSenha123')
+    cy.get('[data-cy="confirm-password"]').type('NovaSenha123')
+    cy.get('[data-cy="submit-password"]').click()
+    cy.contains('Senha alterada').should('be.visible')
   })
 })

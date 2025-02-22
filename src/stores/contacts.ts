@@ -18,42 +18,48 @@ export const useContactsStore = defineStore('contacts', {
     async fetchContacts() {
       this.loading = true
       try {
-        const response = await api.get('/contato/listar/1')
+        const response = await api.post('/contato/pesquisar', {
+          termo: this.searchQuery
+        })
         this.contacts = response.data
       } catch (error) {
-        console.error('Failed to fetch contacts:', error)
+        console.error('Erro ao buscar contatos:', error)
         throw error
       } finally {
         this.loading = false
       }
     },
-    async createContact(contact: Omit<Contato, 'id'>) {
+
+    async saveContact(contact: Partial<Contato>) {
       try {
         const response = await api.post('/contato/salvar', contact)
-        this.contacts.push(response.data)
-        return response.data
+        return response.data.object
       } catch (error) {
-        console.error('Failed to create contact:', error)
+        console.error('Erro ao salvar contato:', error)
         throw error
       }
     },
-    async updateContact(id: number, contact: Partial<Contato>) {
-      try {
-        const response = await api.put(`/contato/salvar/${id}`, contact)
-        const index = this.contacts.findIndex(c => c.id === id)
-        if (index !== -1) this.contacts.splice(index, 1, response.data)
-        return response.data
-      } catch (error) {
-        console.error('Failed to update contact:', error)
-        throw error
-      }
-    },
+
     async deleteContact(id: number) {
       try {
         await api.delete(`/contato/remover/${id}`)
         this.contacts = this.contacts.filter(c => c.id !== id)
       } catch (error) {
-        console.error('Failed to delete contact:', error)
+        console.error('Erro ao excluir contato:', error)
+        throw error
+      }
+    },
+
+    async toggleFavorite(contact: Contato) {
+      try {
+        const endpoint = contact.favorito
+          ? `/favorito/remover/${contact.id}`
+          : '/favorito/salvar'
+
+        await api.post(endpoint, contact)
+        await this.fetchContacts()
+      } catch (error) {
+        console.error('Erro ao atualizar favorito:', error)
         throw error
       }
     }
@@ -61,7 +67,8 @@ export const useContactsStore = defineStore('contacts', {
   getters: {
     filteredContacts(): Contato[] {
       return this.contacts.filter(contact =>
-        contact.pessoa?.nome.toLowerCase().includes(this.searchQuery.toLowerCase()))
+        contact.pessoa?.nome?.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        contact.telefone?.includes(this.searchQuery))
     }
   }
 })
