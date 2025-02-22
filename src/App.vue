@@ -4,7 +4,7 @@
     <v-app-bar app color="primary" dark v-if="isAuthenticated">
       <v-toolbar-title>Minha Agenda</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn to="/home" variant="text">Home</v-btn>
+      <v-btn to="/" variant="text">Home</v-btn>
       <v-btn to="/meu-cadastro" variant="text">Meu Cadastro</v-btn>
       <v-btn to="/usuarios" variant="text" v-if="isAdmin">Usuários</v-btn>
       <v-btn to="/pessoas" variant="text">Pessoas</v-btn>

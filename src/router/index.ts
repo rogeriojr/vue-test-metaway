@@ -10,10 +10,10 @@ import MyRegistrationsView from '@/views/MyRegistrationsView.vue';
 const routes = [
   { path: '/login', name: 'Login', component: LoginView },
   { path: '/', name: 'Home', component: HomeView as any, meta: { requiresAuth: true } },
-  { path: '/contacts', name: 'Contacts', component: ContactsView as any, meta: { requiresAuth: true } },
-  { path: '/persons', name: 'Persons', component: PersonsView as any, meta: { requiresAuth: true } },
-  { path: '/users', name: 'Users', component: UsersView as any, meta: { requiresAuth: true } },
-  { path: '/my-registrations', name: 'MyRegistrations', component: MyRegistrationsView as any, meta: { requiresAuth: true } },
+  { path: '/contatos', name: 'Contatos', component: ContactsView as any, meta: { requiresAuth: true } },
+  { path: '/pessoas', name: 'Pessoas', component: PersonsView as any, meta: { requiresAuth: true } },
+  { path: '/usuarios', name: 'Usuários', component: UsersView as any, meta: { requiresAuth: true } },
+  { path: '/meu-cadastro', name: 'Meu Cadastro', component: MyRegistrationsView as any, meta: { requiresAuth: true } },
 ]
 
 const router = createRouter({
