@@ -77,7 +77,6 @@ const form = ref({
   telefone: auth.user?.telefone || '',
 })
 
-// Validations
 const required = (v: string) => !!v || 'Campo obrigatório'
 const validateCPF = (v: string) => /^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(v) || 'CPF inválido'
 const validatePhone = (v: string) => v?.length === 15 || 'Telefone inválido'

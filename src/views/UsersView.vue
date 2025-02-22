@@ -70,14 +70,14 @@ const editItem = (item: User) => {
 
 const deleteItem = (item: User) => {
   console.log(item)
-  // Implemente a lógica de exclusão aqui
+  // TO DO : Implementar a lógica de exclusão aqui
 }
 
 const saveUser = async (user: User) => {
   if (user.id) {
     await usersStore.updateUser(user)
   } else {
-    // Implementar criação de usuário
+    // TO DO :Implementar criação de usuário
   }
   dialog.value = false
 }

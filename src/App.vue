@@ -4,20 +4,19 @@
     <v-app-bar app color="primary" dark v-if="isAuthenticated">
       <v-toolbar-title>Minha Agenda</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn to="/home" text>Home</v-btn>
-      <v-btn to="/meu-cadastro" text>Meu Cadastro</v-btn>
-      <v-btn to="/usuarios" text v-if="isAdmin">Usuários</v-btn>
-      <v-btn to="/pessoas" text>Pessoas</v-btn>
-      <v-btn to="/contatos" text>Contatos</v-btn>
-      <v-btn @click="logout" text>Logout</v-btn>
+      <v-btn to="/home" variant="text">Home</v-btn>
+      <v-btn to="/meu-cadastro" variant="text">Meu Cadastro</v-btn>
+      <v-btn to="/usuarios" variant="text" v-if="isAdmin">Usuários</v-btn>
+      <v-btn to="/pessoas" variant="text">Pessoas</v-btn>
+      <v-btn to="/contatos" variant="text">Contatos</v-btn>
+      <v-btn @click="logout" variant="text">Logout</v-btn>
     </v-app-bar>
 
-    <!-- Main content -->
+    <!-- Resto do código permanece igual -->
     <v-main>
       <router-view></router-view>
     </v-main>
 
-    <!-- Snackbar for global messages -->
     <v-snackbar v-model="snackbar.show" :color="snackbar.color" timeout="3000">
       {{ snackbar.message }}
     </v-snackbar>
@@ -73,5 +72,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Specific styles for App.vue */
+/* TO DO : Specific styles for App.vue */
 </style>
