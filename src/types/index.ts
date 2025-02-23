@@ -8,6 +8,7 @@ export interface User {
   dataNascimento: string
   password?: string
   tipos: string[]
+  foto?: Foto
 }
 
 export interface Endereco {

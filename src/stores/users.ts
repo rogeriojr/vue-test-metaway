@@ -17,6 +17,7 @@ export const useUsersStore = defineStore('users', {
     loading: false,
     currentUser: null
   }),
+
   actions: {
     async fetchUsers() {
       this.loading = true
@@ -24,7 +25,7 @@ export const useUsersStore = defineStore('users', {
         const response = await api.post('/usuario/pesquisar', { termo: this.searchTerm })
         this.users = response.data
       } catch (error) {
-        console.error('Error fetching users:', error)
+        console.error('Erro ao buscar usuários:', error)
         throw error
       } finally {
         this.loading = false
@@ -36,7 +37,7 @@ export const useUsersStore = defineStore('users', {
         const response = await api.put('/usuario/atualizar', user)
         return response.data.object
       } catch (error) {
-        console.error('Error updating user:', error)
+        console.error('Erro ao atualizar usuário:', error)
         throw error
       }
     },
@@ -51,22 +52,66 @@ export const useUsersStore = defineStore('users', {
         })
         return response.data
       } catch (error) {
-        console.error('Error changing password:', error)
+        console.error('Erro ao alterar senha:', error)
         throw error
       }
     },
 
+    // user.ts (apenas a action fetchCurrentUser alterada)
     async fetchCurrentUser() {
       const authStore = useAuthStore()
       try {
         const response = await api.get(`/usuario/buscar/${authStore.user?.id}`)
         this.currentUser = response.data.object.usuario
+
+        // Corrigido: Buscar URL da foto usando o ID da foto do usuário
+        if (this.currentUser?.foto?.id) {
+          this.currentUser.foto.url = await this.fetchPhoto(this.currentUser.foto.id)
+        }
       } catch (error) {
-        console.error('Error fetching current user:', error)
+        console.error('Erro ao buscar usuário atual:', error)
+        throw error
+      }
+    },
+
+    async fetchPhoto(fotoId: string) {
+      try {
+        const response = await api.get(`/foto/download/${fotoId}`, {
+          responseType: 'blob'
+        })
+        return URL.createObjectURL(response.data)
+      } catch (error) {
+        console.error('Erro ao buscar foto:', error)
+        return null
+      }
+    },
+
+    async uploadPhoto(userId: number, file: File) {
+      try {
+        const formData = new FormData()
+        formData.append('foto', file)
+        const response = await api.post(`/foto/upload/${userId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+
+        const newFoto = response.data.object
+        if (this.currentUser) {
+          this.currentUser.foto = {
+            ...newFoto,
+            url: await this.fetchPhoto(newFoto.id)
+          }
+        }
+
+        return newFoto
+      } catch (error) {
+        console.error('Erro ao fazer upload da foto:', error)
         throw error
       }
     }
   },
+
   getters: {
     filteredUsers(): User[] {
       return this.users.filter(user =>

@@ -1,10 +1,34 @@
 <template>
   <q-page class="q-pa-md">
     <q-card class="q-ma-md custom-card">
-      <div v-if="auth.user?.tipos?.includes('ADMIN')" class="admin-logo">
-        <q-avatar size="80px" class="q-mb-sm">
-          <img :src="logo" alt="MetaWay Logo" />
-        </q-avatar>
+      <!-- Seção da Foto do Perfil -->
+      <div class="profile-photo-section q-pa-md flex flex-center">
+        <div class="relative-position">
+          <q-avatar size="120px" class="profile-photo cursor-pointer" @click="triggerFileInput">
+            <img
+              v-if="auth.user?.foto?.url"
+              :src="auth.user.foto.url"
+              alt="Foto do perfil"
+              class="profile-image"
+            />
+            <q-icon v-else name="person" size="xl" color="grey-6" class="absolute-center" />
+            <q-badge
+              v-if="auth.user?.tipos?.includes('ADMIN')"
+              color="primary"
+              floating
+              class="admin-badge"
+            >
+              ADMIN
+            </q-badge>
+          </q-avatar>
+          <q-icon
+            name="photo_camera"
+            class="photo-upload-icon absolute-bottom-right"
+            color="primary"
+            size="sm"
+          />
+          <input ref="fileInput" type="file" accept="image/*" hidden @change="handlePhotoUpload" />
+        </div>
       </div>
 
       <q-card-section>
@@ -123,7 +147,6 @@
             </q-form>
           </div>
 
-          <!-- Logo lateral para desktop -->
           <div v-if="auth.user?.tipos?.includes('ADMIN')" class="col-md-4 gt-sm flex flex-center">
             <q-avatar size="200px" class="desktop-logo">
               <img :src="logo" alt="MetaWay Logo" />
@@ -145,6 +168,7 @@ import logo from '@/assets/logo-metaway.png'
 const auth = useAuthStore()
 const usersStore = useUsersStore()
 const $q = useQuasar()
+const fileInput = ref<HTMLInputElement | null>(null)
 
 const loading = ref(false)
 const passwordLoading = ref(false)
@@ -164,7 +188,8 @@ const form = ref({
 const required = (val: string) => !!val || 'Campo obrigatório'
 const validatePhone = (val: string) => val?.length === 11 || 'Telefone inválido'
 const validateEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'E-mail inválido'
-const validatePassword = (val: string) => /^.{8,}$/.test(val) || 'Mínimo 8 caracteres'
+const validatePassword = (val: string) =>
+  /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(val) || 'Mínimo 8 caracteres com letras e números'
 const validateDate = (val: string) => /^\d{2}\/\d{2}\/\d{4}$/.test(val) || 'Data inválida'
 
 const validateCPF = (val: string) => {
@@ -247,47 +272,124 @@ const changePassword = async () => {
   }
 }
 
+const triggerFileInput = () => {
+  fileInput.value?.click()
+}
+
+const handlePhotoUpload = async (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (input.files?.[0]) {
+    try {
+      const file = input.files[0]
+      const updatedFoto = await usersStore.uploadPhoto(auth.user!.id, file)
+
+      auth.user!.foto = {
+        id: updatedFoto.id,
+        name: updatedFoto.name,
+        type: updatedFoto.type,
+        url: await usersStore.fetchPhoto(updatedFoto.id),
+      }
+
+      $q.notify({
+        type: 'positive',
+        message: 'Foto atualizada com sucesso!',
+        icon: 'check_circle',
+        position: 'top-right',
+      })
+    } catch (error) {
+      $q.notify({
+        type: 'negative',
+        message: 'Erro ao atualizar foto!',
+        icon: 'error',
+        position: 'top-right',
+      })
+    }
+  }
+}
+
 onMounted(async () => {
   if (auth.user?.id) {
-    await usersStore.fetchCurrentUser()
-    form.value = {
-      ...form.value,
-      nome: usersStore.currentUser?.nome || '',
-      cpf: usersStore.currentUser?.cpf || '',
-      email: usersStore.currentUser?.email || '',
-      telefone: usersStore.currentUser?.telefone || '',
-      dataNascimento: usersStore.currentUser?.dataNascimento
-        ? new Date(usersStore.currentUser.dataNascimento).toLocaleDateString('pt-BR')
-        : '',
+    try {
+      await usersStore.fetchCurrentUser()
+
+      // Corrigido: Atribuir corretamente a foto do usuário
+      if (usersStore.currentUser) {
+        auth.user.foto = {
+          id: usersStore.currentUser.foto.id,
+          name: usersStore.currentUser.foto.name,
+          type: usersStore.currentUser.foto.type,
+          url: usersStore.currentUser.foto.url,
+        }
+      }
+
+      form.value = {
+        ...form.value,
+        nome: usersStore.currentUser?.nome || '',
+        cpf: usersStore.currentUser?.cpf || '',
+        email: usersStore.currentUser?.email || '',
+        telefone: usersStore.currentUser?.telefone || '',
+        dataNascimento: usersStore.currentUser?.dataNascimento
+          ? new Date(usersStore.currentUser.dataNascimento).toLocaleDateString('pt-BR')
+          : '',
+      }
+    } catch (error) {
+      console.log(error)
+      $q.notify({
+        type: 'negative',
+        message: 'Erro ao carregar dados do usuário!',
+        icon: 'error',
+        position: 'top-right',
+      })
     }
   }
 })
 </script>
 
 <style scoped>
+.profile-photo-section {
+  position: relative;
+  margin-top: -80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-photo {
+  border: 4px solid white;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-upload-icon {
+  background: white;
+  border-radius: 50%;
+  padding: 4px;
+  transform: translate(25%, 25%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
 .custom-card {
   max-width: 1000px;
   margin: 0 auto;
   border-radius: 16px;
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
   overflow: visible;
-  position: relative;
+  margin-top: 5vh;
 }
 
-.admin-logo {
-  position: absolute;
-  top: -40px;
-  right: -40px;
-  z-index: 2;
-  transition: transform 0.3s ease;
-  background: white;
-  border-radius: 50%;
-  padding: 8px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-}
-
-.admin-logo:hover {
-  transform: scale(1.05) rotate(-5deg);
+.admin-badge {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 6px 12px;
 }
 
 .desktop-logo {
@@ -314,14 +416,13 @@ onMounted(async () => {
 }
 
 @media (max-width: 600px) {
-  .admin-logo {
-    top: -30px;
-    right: -30px;
+  .profile-photo-section {
+    margin-top: -60px;
   }
 
-  .admin-logo .q-avatar {
-    width: 60px;
-    height: 60px;
+  .profile-photo {
+    width: 100px;
+    height: 100px;
   }
 
   .custom-card {
@@ -338,5 +439,12 @@ onMounted(async () => {
   .q-card__section {
     padding: 32px;
   }
+}
+
+.absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
