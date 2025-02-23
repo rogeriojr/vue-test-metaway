@@ -2,12 +2,22 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated class="bg-primary text-white" v-if="isAuthenticated">
       <q-toolbar>
+        <q-btn
+          flat
+          dense
+          round
+          icon="menu"
+          aria-label="Menu"
+          @click="toggleLeftDrawer"
+          v-if="isAuthenticated"
+        />
+
         <q-toolbar-title>Minha Agenda</q-toolbar-title>
         <q-space />
       </q-toolbar>
     </q-header>
 
-    <NavBar v-if="isAuthenticated" />
+    <NavBar v-if="isAuthenticated" v-model:drawer-open="leftDrawerOpen" />
 
     <q-page-container>
       <router-view />
@@ -36,6 +46,12 @@ import NavBar from '@/components/NavBar.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
+
+const leftDrawerOpen = ref(false)
+
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
 
 const isAuthenticated = computed(() => authStore.token !== null)
 

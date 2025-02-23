@@ -1,5 +1,15 @@
 <template>
-  <q-drawer show-if-above bordered v-if="isAuthenticated">
+  <q-drawer
+    v-model="drawerOpen"
+    show-if-above
+    bordered
+    :breakpoint="600"
+    :width="250"
+    :mini="miniState"
+    @mouseover="miniState = false"
+    @mouseout="miniState = true"
+    v-if="isAuthenticated"
+  >
     <div class="q-pa-md text-center">
       <img
         src="@/assets/logo-metaway.png"
@@ -56,12 +66,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 
 const auth = useAuthStore()
 const router = useRouter()
+
+const drawerOpen = defineModel<boolean>('drawerOpen', { default: false })
+const miniState = ref(false)
 
 const appVersion = import.meta.env.VITE_APP_VERSION || 'v1.0'
 
