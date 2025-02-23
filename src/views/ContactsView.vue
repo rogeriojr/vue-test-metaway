@@ -16,6 +16,12 @@
             </template>
           </q-input>
           <q-btn color="primary" @click="openDialog" icon="add" label="Novo Contato" />
+          <q-btn
+            color="secondary"
+            @click="toggleFavorites"
+            icon="star"
+            :label="contactsStore.showFavorites ? 'Mostrar Todos' : 'Mostrar Favoritos'"
+          />
         </div>
       </q-card-section>
 
@@ -30,9 +36,16 @@
         >
           <template v-slot:body-cell-nome="props">
             <q-td :props="props">
-              <div class="text-weight-bold">{{ formatName(props.row.pessoa.nome) }}</div>
-              <div v-if="props.row.privado" class="text-caption text-grey">
-                <q-icon name="lock" size="12px" /> Contato privado
+              <div class="row items-center q-gutter-sm">
+                <q-avatar v-if="props.row.photoUrl">
+                  <img :src="props.row.photoUrl" alt="Foto do contato" />
+                </q-avatar>
+                <div>
+                  <div class="text-weight-bold">{{ formatName(props.row.pessoa.nome) }}</div>
+                  <div v-if="props.row.privado" class="text-caption text-grey">
+                    <q-icon name="lock" size="12px" /> Contato privado
+                  </div>
+                </div>
               </div>
             </q-td>
           </template>
@@ -70,6 +83,13 @@
             <q-td :props="props" class="q-gutter-xs">
               <q-btn round flat color="primary" icon="edit" @click="editItem(props.row)" />
               <q-btn round flat color="negative" icon="delete" @click="deleteItem(props.row)" />
+              <q-btn
+                round
+                flat
+                :color="props.row.favorito ? 'amber' : 'grey'"
+                icon="star"
+                @click="toggleFavorite(props.row)"
+              />
             </q-td>
           </template>
         </q-table>
@@ -202,6 +222,14 @@ const deleteItem = async (item: Contato) => {
   if (confirm(`Deseja excluir ${item?.pessoa?.nome}?`)) {
     await contactsStore.deleteContact(item.id as number)
   }
+}
+
+const toggleFavorite = async (item: Contato) => {
+  await contactsStore.toggleFavorite(item)
+}
+
+const toggleFavorites = () => {
+  contactsStore.toggleShowFavorites()
 }
 
 const saveContact = async (contact: Contato) => {

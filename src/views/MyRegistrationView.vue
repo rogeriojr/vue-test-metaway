@@ -313,7 +313,7 @@ onMounted(async () => {
       await usersStore.fetchCurrentUser()
 
       // Corrigido: Atribuir corretamente a foto do usuário
-      if (usersStore.currentUser) {
+      if (usersStore.currentUser?.foto) {
         auth.user.foto = {
           id: usersStore.currentUser.foto.id,
           name: usersStore.currentUser.foto.name,

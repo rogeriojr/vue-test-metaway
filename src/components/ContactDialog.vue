@@ -7,6 +7,20 @@
 
       <q-card-section>
         <q-form @submit="onSubmit" class="q-gutter-md">
+          <div class="row items-center q-gutter-sm">
+            <q-avatar v-if="contact.photoUrl" size="80px">
+              <img :src="contact.photoUrl" alt="Foto do contato" />
+            </q-avatar>
+            <q-file
+              v-model="photoFile"
+              label="Upload Foto"
+              accept="image/*"
+              outlined
+              dense
+              @update:model-value="handlePhotoUpload"
+            />
+          </div>
+
           <q-input
             v-model="contact.pessoa.nome"
             label="Nome"
@@ -68,6 +82,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import type { Contato } from '@/types'
+import { useContactsStore } from '@/stores/contacts'
 
 const props = defineProps({
   modelValue: Boolean,
@@ -79,6 +94,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'save'])
 
+const contactsStore = useContactsStore()
 const dialog = ref(props.modelValue)
 const contact = ref<Partial<Contato>>({
   pessoa: {
@@ -102,6 +118,7 @@ const contact = ref<Partial<Contato>>({
   privado: false,
   usuario: null,
 })
+const photoFile = ref<File | null>(null)
 
 watch(
   () => props.modelValue,
@@ -117,6 +134,13 @@ watch(
   },
   { deep: true, immediate: true },
 )
+
+const handlePhotoUpload = async (file: File) => {
+  if (contact.value.id) {
+    const uploadedPhoto = await contactsStore.uploadPhoto(contact.value.id, file)
+    contact.value.photoUrl = uploadedPhoto.url
+  }
+}
 
 const onSubmit = () => {
   emit('save', contact.value)
