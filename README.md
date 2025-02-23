@@ -24,7 +24,7 @@ A aplicação consome dados da API documentada em:
 - Vue Router
 - Pinia (Gerenciamento de estado)
 - Axios (Requisições HTTP)
-- Vuetify (UI Framework)
+- Quasar (UI Framework)
 - Cypress (Testes end-to-end)
 - Vite (Build tool)
 
@@ -43,8 +43,6 @@ src
 +---components
 |   |   ConfirmationDialog.vue
 |   |   NavBar.vue
-|   |
-|   \---__tests__
 +---router
 |       index.ts
 |
@@ -67,7 +65,7 @@ src
         ContactsView.vue
         HomeView.vue
         LoginView.vue
-        MyRegistrationsView.vue
+        MyRegistrationView.vue
         PersonsView.vue
         UsersView.vue
 ```

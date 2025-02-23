@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import api from '@/services/api'
 import type { User } from '@/types'
+import { useAuthStore } from './auth'
 
 interface UsersState {
   users: User[]
@@ -41,9 +42,10 @@ export const useUsersStore = defineStore('users', {
     },
 
     async changePassword(oldPassword: string, newPassword: string) {
+      const authStore = useAuthStore()
       try {
         const response = await api.post('/usuario/alterarSenha', {
-          username: this.currentUser?.username,
+          username: authStore.user?.username,
           password: oldPassword,
           newPassword
         })
@@ -55,8 +57,9 @@ export const useUsersStore = defineStore('users', {
     },
 
     async fetchCurrentUser() {
+      const authStore = useAuthStore()
       try {
-        const response = await api.get(`/usuario/buscar/${this.currentUser?.id}`)
+        const response = await api.get(`/usuario/buscar/${authStore.user?.id}`)
         this.currentUser = response.data.object.usuario
       } catch (error) {
         console.error('Error fetching current user:', error)

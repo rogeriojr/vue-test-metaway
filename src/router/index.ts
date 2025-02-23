@@ -5,7 +5,7 @@ import UsersView from '@/views/UsersView.vue';
 import PersonsView from '@/views/PersonsView.vue';
 import ContactsView from '@/views/ContactsView.vue';
 import LoginView from '@/views/LoginView.vue';
-import MyRegistrationsView from '@/views/MyRegistrationsView.vue';
+import MyRegistrationView from '@/views/MyRegistrationView.vue';
 
 const routes = [
   { path: '/login', name: 'Login', component: LoginView },
@@ -13,7 +13,7 @@ const routes = [
   { path: '/contatos', name: 'Contatos', component: ContactsView as any, meta: { requiresAuth: true } },
   { path: '/pessoas', name: 'Pessoas', component: PersonsView as any, meta: { requiresAuth: true } },
   { path: '/usuarios', name: 'Usuários', component: UsersView as any, meta: { requiresAuth: true } },
-  { path: '/meu-cadastro', name: 'Meu Cadastro', component: MyRegistrationsView as any, meta: { requiresAuth: true } },
+  { path: '/meu-cadastro', name: 'Meu Cadastro', component: MyRegistrationView as any, meta: { requiresAuth: true } },
 ]
 
 const router = createRouter({

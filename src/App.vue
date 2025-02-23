@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
@@ -41,15 +41,14 @@ const isAuthenticated = computed(() => authStore.token !== null)
 
 const snackbar = ref({ show: false, message: '', color: 'positive' })
 
-const logout = () => {
-  authStore.logout()
-  router.push('/login')
-  showSnackbar('Logout realizado com sucesso!', 'positive')
-}
-
-const showSnackbar = (message: string, color: string = 'positive') => {
-  snackbar.value.message = message
-  snackbar.value.color = color
-  snackbar.value.show = true
-}
+onMounted(async () => {
+  if (authStore.token) {
+    try {
+      await authStore.fetchUserData()
+    } catch (error) {
+      authStore.logout()
+      router.push('/login')
+    }
+  }
+})
 </script>

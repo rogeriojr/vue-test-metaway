@@ -37,16 +37,34 @@ export interface Person {
 }
 
 export interface Contato {
-  id?: number
-  telefone: string
-  nome?: string
+  id: number
+  pessoa: {
+    id: number
+    nome: string
+    endereco?: {
+      logradouro: string
+      numero: string
+      bairro: string
+      cidade: string
+      estado: string
+      cep: string
+      pais: string
+    }
+    foto?: {
+      id: string
+      name: string
+      type: string
+    }
+  }
+  tag: string
   email?: string
-  tipoContato?: 'CELULAR' | 'EMAIL' | 'OUTRO'
-  tag?: string
-  privado?: boolean
-  pessoa?: Person
-  usuario?: User
-  favorito?: boolean
+  telefone?: string
+  tipoContato: 'CELULAR' | 'TELEFONE' | 'EMAIL'
+  privado: boolean
+  usuario: {
+    id: number
+    username: string
+  }
 }
 
 export interface AuthResponse {

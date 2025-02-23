@@ -32,9 +32,7 @@
             <q-td :props="props">
               <q-avatar size="48px">
                 <q-img
-                  :src="
-                    props.row.foto?.id ? `/api/foto/download/${props.row.foto.id}` : defaultAvatar
-                  "
+                  :src="props.row.foto?.id ? `/foto/download/${props.row.foto.id}` : defaultAvatar"
                   class="avatar-image"
                 />
               </q-avatar>

@@ -11,13 +11,13 @@ interface AuthState {
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
-    user: null,
-    token: localStorage.getItem('token') || null,
+    user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null,
+    token: localStorage.getItem('token') || sessionStorage.getItem('token') || null,
     refreshToken: localStorage.getItem('refreshToken') || null,
-    rememberMe: false
+    rememberMe: localStorage.getItem('rememberMe') === 'true'
   }),
   actions: {
-    async login(username: string, password: string) {
+    async login(username: string, password: string, rememberMe: boolean) {
       try {
         const response = await api.post<AuthResponse>('/auth/login', { username, password })
         this.token = response.data.accessToken
@@ -31,9 +31,15 @@ export const useAuthStore = defineStore('auth', {
           dataNascimento: '',
           tipos: response.data.tipos
         }
+        this.rememberMe = rememberMe
 
         if (this.rememberMe) {
           localStorage.setItem('token', this.token)
+          localStorage.setItem('user', JSON.stringify(this.user))
+          localStorage.setItem('rememberMe', 'true')
+        } else {
+          sessionStorage.setItem('token', this.token)
+          sessionStorage.setItem('user', JSON.stringify(this.user))
         }
 
         await this.fetchUserData()
@@ -48,7 +54,15 @@ export const useAuthStore = defineStore('auth', {
       if (!this.user?.id) return
       try {
         const response = await api.get<ApiResponse<{ usuario: User }>>(`/usuario/buscar/${this.user.id}`)
-        this.user = response.data.object.usuario
+        this.user = {
+          ...this.user,
+          ...response.data.object.usuario
+        }
+        if (this.rememberMe) {
+          localStorage.setItem('user', JSON.stringify(this.user))
+        } else {
+          sessionStorage.setItem('user', JSON.stringify(this.user))
+        }
       } catch (error) {
         console.error('Error fetching user data:', error)
       }
@@ -73,7 +87,10 @@ export const useAuthStore = defineStore('auth', {
       this.token = null
       this.refreshToken = null
       localStorage.removeItem('token')
-      localStorage.removeItem('refreshToken')
+      localStorage.removeItem('user')
+      localStorage.removeItem('rememberMe')
+      sessionStorage.removeItem('token')
+      sessionStorage.removeItem('user')
     }
   },
   getters: {
