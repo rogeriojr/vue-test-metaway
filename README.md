@@ -1,5 +1,9 @@
 # 📌 Controle de Agenda Pessoal
 
+![alt text](image.png)
+
+![alt text](image-1.png)
+
 ## 📋 Objetivo
 
 O objetivo deste projeto é desenvolver uma aplicação web para controle de agenda pessoal, utilizando Vue 3 com TypeScript, Pinia para gerenciamento de estado, Vue Router para navegação e Cypress para testes end-to-end.
