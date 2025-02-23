@@ -34,7 +34,6 @@
           :loading="usersStore.loading"
           :pagination="pagination"
         >
-          <!-- Coluna de Tipos -->
           <template v-slot:body-cell-tipos="props">
             <q-td :props="props">
               <q-chip
@@ -181,7 +180,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useUsersStore } from '@/stores/users'
 import { useAuthStore } from '@/stores/auth'
 import type { User } from '@/types'

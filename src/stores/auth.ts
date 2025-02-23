@@ -109,7 +109,7 @@ export const useAuthStore = defineStore('auth', {
   },
 
   getters: {
-    isAdmin: (state) => state.user?.tipos?.includes('ADMIN') || false,
+    isAdmin: (state) => state.user?.tipos?.includes('ROLE_ADMIN') || false,
     isAuthenticated: (state) => !!state.token
   }
 })

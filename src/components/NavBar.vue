@@ -24,13 +24,7 @@
         <q-item-section>Meu Cadastro</q-item-section>
       </q-item>
 
-      <q-item
-        clickable
-        v-ripple
-        to="/usuarios"
-        class="q-my-sm"
-        v-if="auth.user?.tipos?.includes('ADMIN')"
-      >
+      <q-item clickable v-ripple to="/usuarios" class="q-my-sm" v-if="auth.isAdmin">
         <q-item-section avatar>
           <q-icon name="people" />
         </q-item-section>
@@ -73,7 +67,6 @@ const appVersion = import.meta.env.VITE_APP_VERSION || 'v1.0'
 
 const isAuthenticated = computed(() => auth.token !== null)
 
-// Função para logout
 const logout = () => {
   auth.logout()
   router.push('/login')
@@ -85,10 +78,12 @@ onMounted(() => {
   if (storedVersion !== appVersion) {
     localStorage.clear()
     sessionStorage.clear()
-
     localStorage.setItem('appVersion', appVersion)
-
     window.location.reload()
+  }
+
+  if (auth.token && !auth.user) {
+    auth.initialize()
   }
 })
 </script>

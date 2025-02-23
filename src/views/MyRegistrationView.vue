@@ -1,7 +1,6 @@
 <template>
   <q-page class="q-pa-md">
     <q-card class="q-ma-md custom-card">
-      <!-- Seção da Foto do Perfil -->
       <div class="profile-photo-section q-pa-md flex flex-center">
         <div class="relative-position">
           <q-avatar size="120px" class="profile-photo cursor-pointer" @click="triggerFileInput">
@@ -312,7 +311,6 @@ onMounted(async () => {
     try {
       await usersStore.fetchCurrentUser()
 
-      // Corrigido: Atribuir corretamente a foto do usuário
       if (usersStore.currentUser?.foto) {
         auth.user.foto = {
           id: usersStore.currentUser.foto.id,

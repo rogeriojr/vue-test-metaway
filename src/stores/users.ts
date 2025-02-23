@@ -57,14 +57,12 @@ export const useUsersStore = defineStore('users', {
       }
     },
 
-    // user.ts (apenas a action fetchCurrentUser alterada)
     async fetchCurrentUser() {
       const authStore = useAuthStore()
       try {
         const response = await api.get(`/usuario/buscar/${authStore.user?.id}`)
         this.currentUser = response.data.object.usuario
 
-        // Corrigido: Buscar URL da foto usando o ID da foto do usuário
         if (this.currentUser?.foto?.id) {
           this.currentUser.foto.url = await this.fetchPhoto(this.currentUser.foto.id)
         }

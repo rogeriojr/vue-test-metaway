@@ -144,7 +144,6 @@ const headers = [
   },
 ]
 
-// Métodos de formatação
 const formatName = (name: string) => name || 'Não informado'
 const formatPhone = (phone: string) =>
   phone?.replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3') || 'Não informado'
