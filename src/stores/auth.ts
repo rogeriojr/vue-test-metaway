@@ -16,6 +16,7 @@ export const useAuthStore = defineStore('auth', {
     refreshToken: localStorage.getItem('refreshToken') || null,
     rememberMe: localStorage.getItem('rememberMe') === 'true'
   }),
+
   actions: {
     async login(username: string, password: string, rememberMe: boolean) {
       try {
@@ -45,7 +46,7 @@ export const useAuthStore = defineStore('auth', {
         await this.fetchUserData()
         return true
       } catch (error) {
-        console.error('Login failed:', error)
+        console.error('Falha no login:', error)
         throw error
       }
     },
@@ -64,7 +65,7 @@ export const useAuthStore = defineStore('auth', {
           sessionStorage.setItem('user', JSON.stringify(this.user))
         }
       } catch (error) {
-        console.error('Error fetching user data:', error)
+        console.error('Erro ao buscar dados do usuário:', error)
       }
     },
 
@@ -91,9 +92,24 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('rememberMe')
       sessionStorage.removeItem('token')
       sessionStorage.removeItem('user')
+    },
+
+    async initialize() {
+      if (this.token && !this.user) {
+        try {
+          const response = await api.get('/user/me', {
+            headers: { Authorization: `Bearer ${this.token}` }
+          })
+          this.user = response.data
+        } catch (error) {
+          this.logout()
+        }
+      }
     }
   },
+
   getters: {
-    isAdmin: (state) => state.user?.tipos?.includes('ADMIN') || false
+    isAdmin: (state) => state.user?.tipos?.includes('ADMIN') || false,
+    isAuthenticated: (state) => !!state.token
   }
 })

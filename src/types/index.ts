@@ -65,6 +65,7 @@ export interface Contato {
     id: number
     username: string
   }
+  photoUrl?: string
 }
 
 export interface AuthResponse {
@@ -80,7 +81,6 @@ export interface ApiResponse<T> {
   object: T
 }
 
-
 export interface PersonsStore {
   searchTerm: string
   persons: Person[]
@@ -89,4 +89,9 @@ export interface PersonsStore {
   savePerson: (person: Partial<Person>) => Promise<void>
   deletePerson: (id: string) => Promise<void>
   uploadPhoto: (id: string, file: File) => Promise<void>
+}
+
+export interface FavoritoRequest {
+  contatoId: number
+  usuarioId: number
 }
