@@ -16,7 +16,7 @@
         alt="Metaway Logo"
         style="max-width: 100%; height: auto"
       />
-      <div class="text-caption text-grey-7 q-mt-sm">Versão: {{ appVersion }}</div>
+      <div class="text-caption text-grey-7 q-mt-sm">{{ appVersion }}</div>
     </div>
 
     <q-list>
