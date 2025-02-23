@@ -20,6 +20,7 @@ export default defineConfig({
       config.env = {
         ...config.env,
         VITE_API_URL: env.VITE_API_URL,
+        VITE_APP_VERSION: env.VITE_APP_VERSION,
         ...cypressEnv
       }
 
@@ -32,6 +33,7 @@ export default defineConfig({
     env: {
       ...cypressEnv,
       API_URL: env.VITE_API_URL,
+      VITE_APP_VERSION: env.VITE_APP_VERSION,
       coverage: {
         url: `${env.VITE_API_URL}/__coverage__`
       }

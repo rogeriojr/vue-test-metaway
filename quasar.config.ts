@@ -53,7 +53,8 @@ export default configure((ctx) => {
 
     build: {
       env: {
-        VITE_API_URL: env.VITE_API_URL
+        VITE_API_URL: env.VITE_API_URL,
+        VITE_APP_VERSION: env.VITE_APP_VERSION
       },
       vitePlugins: [
         vue({

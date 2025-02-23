@@ -6,6 +6,7 @@
         alt="Metaway Logo"
         style="max-width: 100%; height: auto"
       />
+      <div class="text-caption text-grey-7 q-mt-sm">Versão: {{ appVersion }}</div>
     </div>
 
     <q-list>
@@ -61,19 +62,35 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 
 const auth = useAuthStore()
 const router = useRouter()
 
+const appVersion = import.meta.env.VITE_APP_VERSION || 'v1.0'
+
 const isAuthenticated = computed(() => auth.token !== null)
 
+// Função para logout
 const logout = () => {
   auth.logout()
   router.push('/login')
 }
+
+onMounted(() => {
+  const storedVersion = localStorage.getItem('appVersion')
+
+  if (storedVersion !== appVersion) {
+    localStorage.clear()
+    sessionStorage.clear()
+
+    localStorage.setItem('appVersion', appVersion)
+
+    window.location.reload()
+  }
+})
 </script>
 
 <style scoped>

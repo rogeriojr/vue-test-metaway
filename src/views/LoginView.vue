@@ -1,5 +1,9 @@
 <template>
-  <q-page class="flex flex-center bg-grey-2">
+  <q-page class="flex flex-center">
+    <div class="background">
+      <div class="gradient-overlay"></div>
+    </div>
+
     <q-card class="login-card q-pa-xl shadow-10">
       <q-card-section class="text-center">
         <img src="@/assets/logo-metaway.png" alt="Logo Metaway" class="logo q-mb-xl" />
@@ -48,6 +52,8 @@
             :loading="loading"
           />
         </q-form>
+
+        <div class="text-caption text-grey-7 q-mt-lg">Versão: {{ appVersion }}</div>
       </q-card-section>
     </q-card>
   </q-page>
@@ -62,6 +68,8 @@ import { useQuasar } from 'quasar'
 const auth = useAuthStore()
 const router = useRouter()
 const $q = useQuasar()
+
+const appVersion = import.meta.env.VITE_APP_VERSION || 'v1.0'
 
 const form = ref({
   username: '',
@@ -99,11 +107,34 @@ async function submit() {
 </script>
 
 <style scoped>
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('@/assets/login-background.jpg');
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
+
+.gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #9ac1eb, #6a8db8);
+  opacity: 0.8;
+}
+
 .login-card {
   width: 100%;
   max-width: 400px;
   border-radius: 16px;
   transition: transform 0.3s;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 .login-card:hover {
@@ -113,5 +144,10 @@ async function submit() {
 .logo {
   width: 180px;
   height: auto;
+}
+
+.text-caption {
+  font-size: 12px;
+  color: #666;
 }
 </style>
