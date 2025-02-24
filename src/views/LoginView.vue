@@ -113,7 +113,6 @@ async function submit() {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('@/assets/login-background.jpg');
   background-size: cover;
   background-position: center;
   z-index: -1;
