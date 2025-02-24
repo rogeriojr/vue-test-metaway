@@ -6,7 +6,7 @@
 
 ## 📋 Link do projeto online
 
-- [https://vue-test-metaway-ehcbz4kjt-rogeriojrs-projects.vercel.app/login](https://vue-test-metaway-ehcbz4kjt-rogeriojrs-projects.vercel.app/login)
+- [https://vue-test-metaway-ehcbz4kjt-rogeriojrs-projects.vercel.app/](https://vue-test-metaway-ehcbz4kjt-rogeriojrs-projects.vercel.app/)
 
 ## 📋 Objetivo
 
