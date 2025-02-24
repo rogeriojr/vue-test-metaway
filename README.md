@@ -95,7 +95,7 @@ src
 ### 📌 1. Clonar o Repositório
 
 ```sh
-git clone <URL_DO_REPOSITORIO>
+git clone git@github.com:rogeriojr/vue-test-metaway.git
 cd vue-test-metaway
 ```
 
