@@ -33,3 +33,5 @@ coverage
 .env.production
 .vercel
 .env*.local
+.env*.development
+.vercel
