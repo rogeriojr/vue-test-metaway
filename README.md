@@ -4,6 +4,10 @@
 
 ![alt text](image-1.png)
 
+## 📋 Link do projeto online
+
+- [https://vue-test-metaway-ehcbz4kjt-rogeriojrs-projects.vercel.app/login](https://vue-test-metaway-ehcbz4kjt-rogeriojrs-projects.vercel.app/login)
+
 ## 📋 Objetivo
 
 O objetivo deste projeto é desenvolver uma aplicação web para controle de agenda pessoal, utilizando Vue 3 com TypeScript, Pinia para gerenciamento de estado, Vue Router para navegação e Cypress para testes end-to-end.
