@@ -44,13 +44,17 @@ src
 |   main.ts
 |
 +---assets
-|       base.css
-|       logo.svg
-|       main.css
+|       default-avatar.png
+|       logo-metaway.png
 |
 +---components
 |   |   ConfirmationDialog.vue
+|   |   ContactDialog.vue
 |   |   NavBar.vue
+|   |   UsersDialog.vue
++---plugins
+|       quasar.ts
+|
 +---router
 |       index.ts
 |
@@ -64,10 +68,18 @@ src
 |       users.ts
 |
 +---styles
-|       main.scss
+|       global.css
+|       quasar-variables.sass
 |
 +---types
 |       index.ts
+|       v-mask.d.ts
+|       vite-env.d.ts
+|       vue-shim.d.ts
+|
++---utils
+|       notify.ts
+|       validators.ts
 |
 \---views
         ContactsView.vue
