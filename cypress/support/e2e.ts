@@ -11,7 +11,7 @@ beforeEach(() => {
   cy.intercept('POST', '/api/upload', {
     statusCode: 200,
     body: {
-      url: '/uploads/profile.jpg'
+      url: '/uploads/profile.png'
     }
   }).as('uploadPhoto')
 })

@@ -254,8 +254,6 @@ const saveUser = async () => {
   try {
     if (localForm.value.id) {
       await usersStore.updateUser(localForm.value)
-    } else {
-      await usersStore.createUser(localForm.value)
     }
     await usersStore.fetchUsers()
     dialog.value = false

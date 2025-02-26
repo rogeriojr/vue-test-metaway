@@ -286,7 +286,7 @@ const handlePhotoUpload = async (event: Event) => {
         id: updatedFoto.id,
         name: updatedFoto.name,
         type: updatedFoto.type,
-        url: await usersStore.fetchPhoto(updatedFoto.id),
+        url: await usersStore.fetchPhoto(updatedFoto.id).toString(),
       }
 
       $q.notify({

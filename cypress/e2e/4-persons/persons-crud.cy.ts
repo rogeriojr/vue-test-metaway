@@ -71,10 +71,10 @@ describe('Persons CRUD', () => {
   it('should upload profile photo', () => {
     cy.get('table tbody tr').first().find('button[aria-label="Upload Foto"]').click()
 
-    cy.get('input[type="file"]').selectFile('cypress/fixtures/profile.jpg', { force: true })
+    cy.get('input[type="file"]').selectFile('cypress/fixtures/profile.png', { force: true })
     cy.contains('Enviar').click()
 
     cy.contains('Foto atualizada com sucesso').should('exist')
-    cy.get('q-avatar img').should('have.attr', 'src').and('include', 'profile.jpg')
+    cy.get('q-avatar img').should('have.attr', 'src').and('include', 'profile.png')
   })
 })

@@ -47,9 +47,11 @@
           <q-select
             v-model="contact.tipoContato"
             label="Tipo de Contato"
-            :options="['CELULAR', 'TELEFONE', 'EMAIL']"
+            :options="tipoContatoOptions"
             outlined
             dense
+            emit-value
+            map-options
           />
           <q-input
             v-model="contact.telefone"
@@ -60,13 +62,7 @@
           />
           <q-input v-model="contact.email" label="Email" outlined dense type="email" />
 
-          <q-select
-            v-model="contact.tag"
-            label="Categoria"
-            :options="['Comercial', 'Particular', 'Principal', 'Residencial', 'WhatsApp']"
-            outlined
-            dense
-          />
+          <q-select v-model="contact.tag" label="Categoria" :options="tagOptions" outlined dense />
           <q-checkbox v-model="contact.privado" label="Privado" />
         </q-form>
       </q-card-section>
@@ -84,6 +80,9 @@ import { ref, watch } from 'vue'
 import type { Contato } from '@/types'
 import { useContactsStore } from '@/stores/contacts'
 
+const tipoContatoOptions = ['CELULAR', 'TELEFONE', 'EMAIL'] as const
+const tagOptions = ['Comercial', 'Particular', 'Principal', 'Residencial', 'WhatsApp']
+
 const props = defineProps({
   modelValue: Boolean,
   contact: {
@@ -96,29 +95,33 @@ const emit = defineEmits(['update:modelValue', 'save'])
 
 const contactsStore = useContactsStore()
 const dialog = ref(props.modelValue)
-const contact = ref<Partial<Contato>>({
+const photoFile = ref<File | null>(null)
+
+// Objeto padrão para garantir a estrutura completa
+const defaultContact: Partial<Contato> = {
   pessoa: {
     nome: '',
     cpf: '',
     endereco: {
       logradouro: '',
       numero: '',
-      cep: '',
       bairro: '',
       cidade: '',
       estado: '',
+      cep: '',
       pais: '',
     },
-    foto: null,
   },
+  tipoContato: 'CELULAR',
   tag: '',
-  email: '',
-  telefone: '',
-  tipoContato: '',
   privado: false,
-  usuario: null,
-})
-const photoFile = ref<File | null>(null)
+  usuario: {
+    id: -1,
+    username: '',
+  },
+}
+
+const contact = ref<Partial<Contato>>({ ...defaultContact })
 
 watch(
   () => props.modelValue,
@@ -130,7 +133,19 @@ watch(
 watch(
   () => props.contact,
   (value) => {
-    contact.value = { ...value }
+    // Mescla o contato recebido com os valores padrão
+    contact.value = {
+      ...defaultContact,
+      ...value,
+      pessoa: {
+        ...defaultContact.pessoa,
+        ...value.pessoa,
+        endereco: {
+          ...defaultContact.pessoa?.endereco,
+          ...value.pessoa?.endereco,
+        },
+      },
+    }
   },
   { deep: true, immediate: true },
 )
@@ -138,7 +153,9 @@ watch(
 const handlePhotoUpload = async (file: File) => {
   if (contact.value.id) {
     const uploadedPhoto = await contactsStore.uploadPhoto(contact.value.id, file)
-    contact.value.photoUrl = uploadedPhoto.url
+    if (uploadedPhoto) {
+      contact.value.photoUrl = uploadedPhoto.url
+    }
   }
 }
 

@@ -44,7 +44,7 @@ cypress/
     users.json
     persons.json
     contacts.json
-    profile.jpg
+    profile.png
   e2e/
     1-auth/
       login.cy.ts
