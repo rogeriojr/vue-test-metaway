@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "pessoa": {
+      "id": 1,
+      "nome": "Maria Souza",
+      "cpf": "32165498709"
+    },
+    "telefone": "11999998888",
+    "email": "maria@test.com",
+    "tipoContato": "CELULAR",
+    "favorito": true
+  }
+]

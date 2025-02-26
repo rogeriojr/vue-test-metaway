@@ -42,6 +42,7 @@ export interface Contato {
   pessoa: {
     id: number
     nome: string
+    cpf: string
     endereco?: {
       logradouro: string
       numero: string

@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "nome": "João Silva",
+    "cpf": "12345678909",
+    "endereco": {
+      "cep": "01001000",
+      "logradouro": "Praça da Sé",
+      "numero": "100",
+      "bairro": "Sé",
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "pais": "Brasil"
+    },
+    "foto": null
+  }
+]

@@ -39,6 +39,30 @@ A aplicação consome dados da API documentada em:
 ## 📂 Estrutura do Projeto
 
 ```
+cypress/
+ fixtures/
+    users.json
+    persons.json
+    contacts.json
+    profile.jpg
+  e2e/
+    1-auth/
+      login.cy.ts
+      logout.cy.ts
+    2-home/
+      home.cy.ts
+    3-contacts/
+      contacts-crud.cy.ts
+    4-persons/
+      persons-crud.cy.ts
+    5-users/
+      users-crud.cy.ts
+    6-profile/
+      my-registration.cy.ts
+    support/
+      commands.ts
+    utils/
+      helpers.ts
 src
 |   App.vue
 |   main.ts

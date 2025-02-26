@@ -1,17 +1,17 @@
-import './component'
+import './commands'
 
-declare global {
-  namespace Cypress {
-    interface Chainable {
-      attachFile(value: string): Chainable<JQuery<HTMLElement>>
+// Configuração global
+beforeEach(() => {
+  // Mock de APIs
+  cy.intercept('POST', '/api/login', { fixture: 'users.json' }).as('login')
+  cy.intercept('GET', '/api/contatos', { fixture: 'contacts.json' }).as('getContacts')
+  cy.intercept('GET', '/api/pessoas', { fixture: 'persons.json' }).as('getPersons')
+
+  // Mock de upload de foto
+  cy.intercept('POST', '/api/upload', {
+    statusCode: 200,
+    body: {
+      url: '/uploads/profile.jpg'
     }
-  }
-}
-
-Cypress.Commands.add('attachFile', { prevSubject: 'element' }, (subject, fileName: string) => {
-  cy.wrap(subject).selectFile({
-    contents: Cypress.Buffer.from('file contents'),
-    fileName,
-    lastModified: Date.now(),
-  })
+  }).as('uploadPhoto')
 })

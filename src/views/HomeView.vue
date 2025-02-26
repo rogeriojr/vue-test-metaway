@@ -235,7 +235,7 @@ const handlePhotoUpload = async (file: File) => {
 
       if (selectedContact.value.pessoa?.id) {
         selectedContact.value.photoUrl = await contactsStore.fetchPhoto(
-          selectedContact.value.pessoa.id,
+          selectedContact.value.pessoa.id.toString(),
         )
       }
     } catch (error) {

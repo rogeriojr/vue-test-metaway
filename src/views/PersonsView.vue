@@ -247,7 +247,7 @@ const editItem = (person: Person) => {
 
 const deleteItem = async (person: Person) => {
   if (confirm(`Deseja excluir ${person.nome}?`)) {
-    await personsStore.deletePerson(person.id.toString())
+    await personsStore.deletePerson(person.id)
     await personsStore.fetchPersons()
   }
 }

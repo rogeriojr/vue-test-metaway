@@ -74,6 +74,7 @@ const appVersion = import.meta.env.VITE_APP_VERSION || 'v1.0'
 const form = ref({
   username: '',
   password: '',
+  rememberMe: false,
 })
 const rememberMe = ref(false)
 const showPassword = ref(false)
@@ -89,7 +90,7 @@ const togglePassword = () => {
 async function submit() {
   loading.value = true
   try {
-    await auth.login(form.value.username, form.value.password)
+    await auth.login(form.value.username, form.value.password, form.value.rememberMe)
     router.push('/')
     $q.notify({
       type: 'positive',
